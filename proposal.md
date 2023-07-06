@@ -1,0 +1,1 @@
+The idea is to create a go script that parses the HTML of any provided website and creates a new markdown file for it.
