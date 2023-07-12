@@ -13,15 +13,18 @@ import (
 )
 
 // Navigates to and fetches the HTML for the provided website
-func fetchHtml(website string) string {
+func scrapeHtml(url string) string {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 
 	var html string
-	chromedp.Run(ctx,
-		chromedp.Navigate(website),
+	err := chromedp.Run(ctx,
+		chromedp.Navigate(url),
 		chromedp.OuterHTML("body", &html, chromedp.ByQuery),
 	)
+	if err != nil {
+		panic(err)
+	}
 	return html
 }
 
@@ -50,17 +53,16 @@ func saveFile(baseDomain string, markdown string, filePath string) {
 }
 
 func main() {
-	website := flag.String("website", "", "Website to download")
-
+	url := flag.String("url", "", "The URL of the website to download")
 	flag.Parse()
 
-	if *website != "" {
-		var html = fetchHtml(*website)
-		var baseDomain = md.DomainFromURL(*website)
+	if *url != "" {
+		var html = scrapeHtml(*url)
+		var baseDomain = md.DomainFromURL(*url)
 		var markdown = createMarkdown(baseDomain, html)
 
 		saveFile(baseDomain, markdown, markdown)
 	} else {
-		fmt.Println("'--website' flag missing")
+		fmt.Println("'--url' flag missing")
 	}
 }
