@@ -42,7 +42,7 @@ func createMarkdown(baseDomain string, html string) string {
 }
 
 // Saves the new markdown file
-func saveFile(baseDomain string, markdown string, filePath string) {
+func saveFile(baseDomain string, markdown string) {
 	outputFile, err := os.Create("./output/" + baseDomain + ".md")
 	if err != nil {
 		panic(err)
@@ -61,7 +61,7 @@ func main() {
 		var baseDomain = md.DomainFromURL(*url)
 		var markdown = createMarkdown(baseDomain, html)
 
-		saveFile(baseDomain, markdown, markdown)
+		saveFile(baseDomain, markdown)
 	} else {
 		fmt.Println("'--url' flag missing")
 	}
